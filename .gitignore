@@ -1,0 +1,24 @@
+# Node.js
+node_modules/
+npm-debug.log
+.env
+dist/
+build/
+
+# Optional: Log files
+*.log
+
+# React build output
+/build/
+
+# React dependencies
+/node_modules/
+
+# Optional: Environment files
+/.env
+
+# Optional: VS Code settings (if you're using VS Code)
+.vscode/
+
+# Optional: macOS and other system files
+.DS_Store
