@@ -1,18 +1,26 @@
+require('dotenv').config(); 
 const express = require('express');
+const mongoose = require('mongoose');
 const cors = require('cors');
+const authRoutes = require('./routes/authRoutes');
+const collectionRoutes = require('./routes/collectionRoutes');
+
 const app = express();
 
-// Enable CORS
-app.use(cors());
+//Middleware
+app.use(express.json());
+app.use(cors()); 
 
-// Your other middleware and routes go here
-app.use(express.json()); // For JSON body parsing
+//MongoDB Connection
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB connected"))
+  .catch(err => console.log("Failed to connect to MongoDB:", err));
 
-// Example route
-app.get('/api/collections', (req, res) => {
-  res.json({ message: 'Fetching collections...' });
+// Routes
+app.use('/api/auth', authRoutes); 
+app.use('/api/collections', collectionRoutes); 
+
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
-
-
-const port = process.env.PORT || 5001;
-app.listen(port, () => console.log(`Server running on port ${port}`));
