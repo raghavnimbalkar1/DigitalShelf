@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5001/api'; // Your backend API URL
+const API_URL = 'http://localhost:5001/api'; // Backend API URL
 
 // Axios instance for API requests
 const api = axios.create({
@@ -10,7 +10,7 @@ const api = axios.create({
   },
 });
 
-// Example function to fetch collections
+// Function to fetch collections
 export const getCollections = async () => {
   try {
     const response = await api.get('/collections');

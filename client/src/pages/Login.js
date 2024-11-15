@@ -1,30 +1,63 @@
-// src/pages/Login.js
 import React, { useState } from 'react';
-import api from '../api';
+import { useNavigate, Link } from 'react-router-dom';
+import axios from 'axios';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import "../styles/SignIn.css";
 
 const Login = ({ setAuthenticated }) => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post('/auth/login', formData);
-      localStorage.setItem('token', res.data.token);
+      const response = await axios.post('http://localhost:5001/api/auth/login', { email, password });
+      localStorage.setItem('authToken', response.data.token);
       setAuthenticated(true);
-    } catch (err) {
-      console.error(err);
-      alert('Login failed');
+      navigate('/');
+    } catch (error) {
+      setError(error.response?.data?.message || 'Login failed. Please check your credentials.');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input name="email" placeholder="Email" onChange={handleChange} required />
-      <input name="password" type="password" placeholder="Password" onChange={handleChange} required />
-      <button type="submit">Login</button>
-    </form>
+    <div className="login-container">
+      <h2>Login</h2>
+      {error && <p className="error-message">{error}</p>}
+      <form onSubmit={handleLogin}>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <div className="password-container">
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <i
+            className={`fa ${showPassword ? "fa-eye-slash" : "fa-eye"}`}
+            onClick={togglePasswordVisibility}
+          ></i>
+        </div>
+        <button type="submit">Login</button>
+      </form>
+      <p>
+        Don't have an account? <Link to="/signup">Sign Up</Link>
+      </p>
+    </div>
   );
 };
 

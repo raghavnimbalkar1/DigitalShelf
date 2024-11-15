@@ -1,0 +1,43 @@
+/* ItemPage.css */
+
+.item-page {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  .item-banner {
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    height: 200px;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .item-details {
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  .item-rating {
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+  }
+  
+  .item-description {
+    font-size: 0.9rem;
+    color: #b3b3b3;
+    margin-bottom: 20px;
+  }
+  
+  .add-to-collection {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  

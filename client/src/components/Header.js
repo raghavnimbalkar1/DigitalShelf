@@ -26,18 +26,12 @@ const Home = () => {
       {loading ? (
         <p>Loading collections...</p>
       ) : (
-        <div>
-          {collections.length > 0 ? (
-            collections.map((collection, index) => (
-              <div key={index}>
-                <h2>{collection.name}</h2>
-                <p>{collection.description}</p>
-              </div>
-            ))
-          ) : (
-            <p>No collections found.</p>
-          )}
-        </div>
+        collections.map((collection, index) => (
+          <div key={index}>
+            <h2>{collection.name}</h2>
+            <p>{collection.description}</p>
+          </div>
+        ))
       )}
     </div>
   );

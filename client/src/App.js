@@ -1,45 +1,48 @@
-// src/App.js
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import './styles/App.css';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import axios from 'axios';
-import Home from './components/Home';
+import Home from './components/Header';
 import Collection from './components/Collection';
 import AddItemForm from './components/AddItemForm';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
+import Dashboard from './components/Dashboard';
 
 const App = () => {
-  const [authenticated, setAuthenticated] = useState(false);
-  const [message, setMessage] = useState('');
+  const [authenticated, setAuthenticated] = useState(!!localStorage.getItem('authToken'));
 
   useEffect(() => {
-    // Fetch data from the backend API to display message
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('http://localhost:5001/api/collections');
-        setMessage(response.data.message); // Set the message from API response
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+    if (authenticated) {
+      axios
+        .get('http://localhost:5001/api/collections', {
+          headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    }
+  }, [authenticated]);
 
-    fetchData();
-  }, []);
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    setAuthenticated(false);
+  };
 
   return (
     <Router>
       <div className="App">
-        <header className="App-header">
-          <h1>Welcome to DigitalShelf!</h1>
-          <p>{message || 'Loading collections...'}</p>
-        </header>
-        
-        {/* Routing based on authentication */}
+        {authenticated && (
+          <header className="App-header">
+            <h1>Welcome to DigitalShelf!</h1>
+            <button onClick={handleLogout}>Logout</button>
+          </header>
+        )}
+
         <Routes>
-          <Route path="/" element={authenticated ? <Home /> : <Login setAuthenticated={setAuthenticated} />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/collection" element={<Collection />} />
-          <Route path="/add" element={<AddItemForm />} />
+          <Route path="/" element={authenticated ? <Dashboard /> : <Navigate to="/login" />} />
+          <Route path="/signup" element={<Signup setAuthenticated={setAuthenticated} />} />
+          <Route path="/login" element={<Login setAuthenticated={setAuthenticated} />} />
+          <Route path="/collection" element={authenticated ? <Collection /> : <Navigate to="/login" />} />
+          <Route path="/add" element={authenticated ? <AddItemForm /> : <Navigate to="/login" />} />
         </Routes>
       </div>
     </Router>

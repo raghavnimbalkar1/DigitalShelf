@@ -8,7 +8,6 @@ exports.getCollections = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 exports.addCollection = async (req, res) => {
   const { name, type, coverImage } = req.body;
   try {

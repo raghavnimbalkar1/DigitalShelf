@@ -1,17 +1,20 @@
-// src/components/Collection.js
 import React, { useEffect, useState } from 'react';
-import api from '../api';
+import axios from 'axios';
 
 const Collection = () => {
   const [items, setItems] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const res = await api.get('/collections');
+        const res = await axios.get('http://localhost:5001/api/collections', {
+          headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+        });
         setItems(res.data);
       } catch (err) {
-        console.error(err);
+        console.error('Error fetching collections:', err);
+        setError('Failed to load collections.');
       }
     };
     fetchItems();
@@ -20,10 +23,9 @@ const Collection = () => {
   return (
     <div>
       <h1>Collection Items</h1>
-      {items.map((item) => (
-        <div key={item._id} style={{ border: '1px solid #ddd', margin: '10px', padding: '10px' }}>
-          <h2>{item.title}</h2>
-          <p>{item.category}</p>
+      {error ? <p>{error}</p> : items.map((item) => (
+        <div key={item._id}>
+          <h2>{item.name}</h2>
           <p>{item.description}</p>
         </div>
       ))}
