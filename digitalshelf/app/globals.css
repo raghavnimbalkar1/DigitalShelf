@@ -1,7 +1,14 @@
+@import "@fortawesome/fontawesome-free/css/all.min.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Set a modern font globally */
 body {
-  @apply bg-gray-900 text-white;
+  @apply bg-white text-black font-[Inter]; /* Make sure Inter is installed */
+}
+
+/* Fix input text visibility */
+input {
+  @apply text-black;
 }
